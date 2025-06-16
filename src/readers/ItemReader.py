@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 
-from ConverterUtils import ConverterUtils
+from src.utils.ConverterUtils import ConverterUtils
 
 converter = ConverterUtils()
 

@@ -2,12 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+from datetime import datetime
 import json
 
-from ItemReader import ItemReader
-from TotalReader import TotalReader
-from AddressReader import AddressReader
-from FantasyNameReader import FantasyNameReader
+from src.readers.ItemReader import ItemReader
+from src.readers.TotalReader import TotalReader
+from src.readers.AddressReader import AddressReader
+from src.readers.FantasyNameReader import FantasyNameReader
 
 itemReader = ItemReader()
 totalReader = TotalReader()
@@ -117,12 +118,12 @@ qrcode = "23240606057223038063650230000001531023004649"
 #------------------------------------------------------------------------------
 # Json Builder
 #------------------------------------------------------------------------------
+now = datetime.now()
+
 driver = webdriver.Edge()
 driver.get('http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf')
 
 sleep(1)
-
-#tag[@atribute='value']
 
 accessKey = driver.find_element(By.ID, "acompanhamentoForm:chaveAcesso")
 accessCode = driver.find_element(By.ID, "acompanhamentoForm:codigoAcesso")
@@ -137,7 +138,7 @@ consultaCompletaBtn.click()
 
 sleep(2)
 
-with open("target/" + qrcode + ".json", "w", encoding="utf-8") as arquivo:
+with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w", encoding="utf-8") as arquivo:
     json_list = {}
 
     json_list["cfeKey"] = getCfeKey()
@@ -173,28 +174,3 @@ with open("target/" + qrcode + ".json", "w", encoding="utf-8") as arquivo:
     json_list["obsFiscoList"] = getObsFiscoList()
 
     json.dump(json_list, arquivo, indent=4, ensure_ascii=False)
-
-'''
-produtoServicoBtn = driver.find_element(By.ID, "tab_3")
-produtoServicoBtn.click()
-
-#------------------------------------------------------------------------------
-# RECUPERANDO AS LISTAS DE TABELAS QUE CONTEM OS DADOS PRINCIPAIS E OS DETALHES
-#------------------------------------------------------------------------------
-productList = driver.find_elements(By.XPATH, "//table[@class='toggle box']")
-detailList = driver.find_elements(By.XPATH, "//table[@class='toggable box']")
-
-#------------------------------------------------------------------------------
-# ITERANDO AS LISTAS DE DADOS PARA PEGAR OS DADOS DE CADA ITEM
-#------------------------------------------------------------------------------
-for product, detail in zip(productList, detailList):
-    productNumber = product.find_elements(By.TAG_NAME, "td")[0]
-    productDescription = product.find_elements(By.TAG_NAME, "td")[1]
-    productAmount = product.find_elements(By.TAG_NAME, "td")[2]
-
-    print("Product Number: " + productNumber.text)
-    print("Product Description: " + productDescription.text)
-    print("Product Amount: " + productAmount.text)
-    print("")
-    print("")
-'''
