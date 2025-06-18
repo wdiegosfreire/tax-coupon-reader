@@ -10,12 +10,14 @@ from src.readers.TotalReader import TotalReader
 from src.readers.AddressReader import AddressReader
 from src.readers.FantasyNameReader import FantasyNameReader
 from src.readers.StateRegistrationReader import StateRegistrationReader
+from src.readers.CostumerTaxIdNumberReader import CostumerTaxIdNumberReader
 
 itemReader = ItemReader()
 totalReader = TotalReader()
 addressReader = AddressReader()
 fantasyNameReader = FantasyNameReader()
 stateRegistrationReader = StateRegistrationReader()
+costumerTaxIdNumberReader = CostumerTaxIdNumberReader()
 
 #------------------------------------------------------------------------------
 # Global Methods
@@ -34,10 +36,6 @@ def getTaxIdNumber():
 
 def getExtractNumber():
     return qrcode[31:37]
-
-def getCostumerTaxIdNumber():
-    driver.find_element(By.ID, "tab_0").click()
-    return driver.find_element(By.ID, "NFe").find_elements(By.TAG_NAME, "fieldset")[2].find_elements(By.TAG_NAME, "td")[0].find_element(By.TAG_NAME, "span").text.replace(".", "").replace("-", "")
 
 def getCostumerTaxIdNumberFormatted():
     driver.find_element(By.ID, "tab_0").click()
@@ -145,7 +143,7 @@ with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w
     json_list["taxIdNumber"] = getTaxIdNumber()
     json_list["stateRegistration"] = stateRegistrationReader.get(driver)
     json_list["extractNumber"] = getExtractNumber()
-    json_list["costumerTaxIdNumber"] = getCostumerTaxIdNumber()
+    json_list["costumerTaxIdNumber"] = costumerTaxIdNumberReader.get(driver)
     json_list["costumerTaxIdNumberFormatted"] = getCostumerTaxIdNumberFormatted()
     json_list["taxpayerObservation"] = getTaxpayerObservation()
     json_list["companyName"] = getCompanyName()
