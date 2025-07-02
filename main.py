@@ -9,6 +9,7 @@ from src.readers.ItemReader import ItemReader
 from src.readers.TotalReader import TotalReader
 from src.readers.AddressReader import AddressReader
 from src.readers.FantasyNameReader import FantasyNameReader
+from src.readers.PaymentChangeReader import PaymentChangeReader
 from src.readers.StateRegistrationReader import StateRegistrationReader
 from src.readers.CostumerTaxIdNumberReader import CostumerTaxIdNumberReader
 
@@ -16,6 +17,7 @@ itemReader = ItemReader()
 totalReader = TotalReader()
 addressReader = AddressReader()
 fantasyNameReader = FantasyNameReader()
+paymentChangeReader = PaymentChangeReader()
 stateRegistrationReader = StateRegistrationReader()
 costumerTaxIdNumberReader = CostumerTaxIdNumberReader()
 
@@ -99,9 +101,6 @@ def getPaymentMethod():
 def getPaymentValue():
     return 0
 
-def getPaymentChange():
-    return 0
-
 def getObsFiscoList():
     return []
 
@@ -166,7 +165,7 @@ with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w
     json_list["cancellationCouponData"] = getCancellationCouponData()
     json_list["paymentMethod"] = getPaymentMethod()
     json_list["paymentValue"] = getPaymentValue()
-    json_list["paymentChange"] = getPaymentChange()
+    json_list["paymentChange"] = paymentChangeReader.get(driver)
     json_list["obsFiscoList"] = getObsFiscoList()
 
     json.dump(json_list, arquivo, indent=4, ensure_ascii=False)
