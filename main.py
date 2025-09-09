@@ -5,18 +5,28 @@ from time import sleep
 from datetime import datetime
 import json
 
+from src.readers.MfeReader import MfeReader
 from src.readers.ItemReader import ItemReader
 from src.readers.TotalReader import TotalReader
+from src.readers.CfeKeyReader import CfeKeyReader
+from src.readers.QrCodeReader import QrCodeReader
 from src.readers.AddressReader import AddressReader
+from src.readers.CompanyNameReader import CompanyNameReader
 from src.readers.FantasyNameReader import FantasyNameReader
+from src.readers.EmissionDateReader import EmissionDateReader
 from src.readers.PaymentChangeReader import PaymentChangeReader
 from src.readers.StateRegistrationReader import StateRegistrationReader
 from src.readers.CostumerTaxIdNumberReader import CostumerTaxIdNumberReader
 
+mfeReader = MfeReader()
 itemReader = ItemReader()
 totalReader = TotalReader()
+cfeKeyReader = CfeKeyReader()
+qrCodeReader = QrCodeReader()
 addressReader = AddressReader()
+companyNameReader = CompanyNameReader()
 fantasyNameReader = FantasyNameReader()
+emissionDateReader = EmissionDateReader()
 paymentChangeReader = PaymentChangeReader()
 stateRegistrationReader = StateRegistrationReader()
 costumerTaxIdNumberReader = CostumerTaxIdNumberReader()
@@ -24,12 +34,6 @@ costumerTaxIdNumberReader = CostumerTaxIdNumberReader()
 #------------------------------------------------------------------------------
 # Global Methods
 #------------------------------------------------------------------------------
-def getCfeKey():
-    return qrcode
-
-def getMfe():
-    return {"serialNumber": qrcode[22:31]}
-
 def getCustomer():
     return {}
 
@@ -45,10 +49,6 @@ def getCostumerTaxIdNumberFormatted():
 
 def getTaxpayerObservation():
     return ""
-
-def getCompanyName():
-    driver.find_element(By.ID, "tab_0").click()
-    return driver.find_element(By.ID, "NFe").find_elements(By.TAG_NAME, "fieldset")[1].find_elements(By.TAG_NAME, "td")[1].find_element(By.TAG_NAME, "span").text
 
 #todo
 def getPayments():
@@ -66,16 +66,12 @@ def getDiscount():
 def getIncrease():
     return 0
 
-def getEmissionDate():
-    driver.find_element(By.ID, "tab_0").click()
-    return driver.find_element(By.ID, "NFe").find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "td")[3].find_element(By.TAG_NAME, "span").text[0:19]
-
 def getBarcode():
     return qrcode
 
-def getQrCode():
-    driver.find_element(By.ID, "tab_7").click()
-    return driver.find_element(By.ID, "Inf").find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "td")[0].find_element(By.TAG_NAME, "span").text
+# def getQrCode():
+#     driver.find_element(By.ID, "tab_7").click()
+#     return driver.find_element(By.ID, "Inf").find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "td")[0].find_element(By.TAG_NAME, "span").text
 
 def getLogoURL():
     return ""
@@ -107,12 +103,16 @@ def getObsFiscoList():
 #------------------------------------------------------------------------------
 # Global Variables
 #------------------------------------------------------------------------------
-qrcode = "23240606057223038063650230000001531023004649"
+#qrcode = "23240606057223038063650230000001531023004649"
+
+# qrcode = "23250906057223038063650270000026101270109541"
 
 
 #------------------------------------------------------------------------------
 # Json Builder
 #------------------------------------------------------------------------------
+qrcode = input("Olá! Informe o QRCODE da NFC-e e pressione Enter:")
+
 now = datetime.now()
 
 driver = webdriver.Edge()
@@ -136,8 +136,8 @@ sleep(2)
 with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w", encoding="utf-8") as arquivo:
     json_list = {}
 
-    json_list["cfeKey"] = getCfeKey()
-    json_list["mfe"] = getMfe()
+    json_list["cfeKey"] = cfeKeyReader.get(qrcode)
+    json_list["mfe"] = mfeReader.get(qrcode)
     json_list["customer"] = getCustomer()
     json_list["taxIdNumber"] = getTaxIdNumber()
     json_list["stateRegistration"] = stateRegistrationReader.get(driver)
@@ -145,7 +145,7 @@ with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w
     json_list["costumerTaxIdNumber"] = costumerTaxIdNumberReader.get(driver)
     json_list["costumerTaxIdNumberFormatted"] = getCostumerTaxIdNumberFormatted()
     json_list["taxpayerObservation"] = getTaxpayerObservation()
-    json_list["companyName"] = getCompanyName()
+    json_list["companyName"] = companyNameReader.get(driver)
     json_list["fantasyName"] = fantasyNameReader.get(driver)
     json_list["address"] = addressReader.get(driver)
     json_list["items"] = itemReader.get(driver)
@@ -153,9 +153,9 @@ with open("target/" + now.strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w
     json_list["subTotal"] = getSubTotal()
     json_list["discount"] = getDiscount()
     json_list["increase"] = getIncrease()
-    json_list["emissionDate"] = getEmissionDate()
+    json_list["emissionDate"] = emissionDateReader.get(driver)
     json_list["barcode"] = getBarcode()
-    json_list["qrCode"] = getQrCode()
+    json_list["qrCode"] = qrCodeReader.get(driver)
     json_list["logoURL"] = getLogoURL()
     json_list["satNumber"] = getSatNumber()
     json_list["totalTaxes"] = getTotalTaxes()
