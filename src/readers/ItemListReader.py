@@ -4,7 +4,7 @@ from src.utils.ConverterUtils import ConverterUtils
 
 converter = ConverterUtils()
 
-class ItemReader:
+class ItemListReader:
 
     def get(self, driver):
         driver.find_element(By.ID, "tab_3").click()
