@@ -131,10 +131,21 @@ consultaCompletaBtn.click()
 
 sleep(2)
 
-emissionDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
-emissionDate = emissionDate.strftime("%Y-%m-%d %H%M")
+fileName = fantasyNameReader.get(driver)
 
-with open("target/" + emissionDate + " " + qrcode + ".json", "w", encoding="utf-8") as arquivo:
+if not fileName or not fileName.strip():
+    fileName = companyNameReader.get(driver)
+
+if not fileName or not fileName.strip():
+    fileName = qrcode
+
+if not fileName or not fileName.strip():
+    fileName = "Undefined Name"
+
+fileDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
+fileDate = fileDate.strftime("%Y-%m-%d %H%M")
+
+with open("target/" + fileDate + " " + fileName + ".json", "w", encoding="utf-8") as arquivo:
     json_list = {}
 
     json_list["cfeKey"] = cfeKeyReader.get(qrcode)
