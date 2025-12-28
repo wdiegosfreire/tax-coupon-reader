@@ -1,3 +1,4 @@
+import sys
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
@@ -97,7 +98,18 @@ def getObsFiscoList():
 options = Options()
 options.add_argument("--start-maximized")
 service = Service(executable_path="C:\\Development\\Projects\\other-environment\\driver\\msedgedriver.exe")
-driver = webdriver.Edge(service=service, options=options)
+# driver = webdriver.Edge(service=service, options=options)
+
+try:
+    driver = webdriver.Edge(service=service, options=options)
+except Exception as e:
+    print("")
+    print("Não foi possível iniciar o WebDriver do Microsoft Edge.")
+    print("Possivelmente a versão instalada do WebDriver não é compatível com a versão atual do navegador.")
+    print("Acesse o site https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ para baixar a versão correta do WebDriver.")
+    print("Após baixar, substitua o arquivo msedgedriver.exe na pasta driver deste projeto.")
+    sys.exit(0)
+
 
 #------------------------------------------------------------------------------
 # Global Variables
