@@ -131,7 +131,10 @@ consultaCompletaBtn.click()
 
 sleep(2)
 
-with open("target/" + datetime.now().strftime("%Y-%m-%d %H%M") + " " + qrcode + ".json", "w", encoding="utf-8") as arquivo:
+emissionDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
+emissionDate = emissionDate.strftime("%Y-%m-%d %H%M")
+
+with open("target/" + emissionDate + " " + qrcode + ".json", "w", encoding="utf-8") as arquivo:
     json_list = {}
 
     json_list["cfeKey"] = cfeKeyReader.get(qrcode)
