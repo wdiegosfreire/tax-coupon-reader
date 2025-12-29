@@ -120,87 +120,93 @@ except Exception as e:
 # Json Builder
 #------------------------------------------------------------------------------
 
-# qrcode = "23250933200056034710651410001085051507317009"
-print("\nOla!")
-qrcode = input("Informe o QRCODE da NFC-e e pressione Enter:")
+while True:
 
-driver.get('http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf')
+    # qrcode = "23250933200056034710651410001085051507317009"
+    print("\nOla!")
+    qrcode = input("Informe o QRCODE da NFC-e e pressione Enter:")
 
-sleep(1)
+    if qrcode == "exit":
+        print("Encerrando o programa...")
+        break  # Sai do loop e finaliza o script
 
-accessKey = driver.find_element(By.ID, "acompanhamentoForm:chaveAcesso")
-accessCode = driver.find_element(By.ID, "acompanhamentoForm:codigoAcesso")
+    driver.get('http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf')
 
-accessKey.send_keys(qrcode)
+    sleep(1)
 
-print("\nVa ao navegador e preencha o codigo CAPTCHA, mas nao continue pelo navegador.")
-input("Em seguida, retorne para este terminal e pressione Enter para continuar.")
+    accessKey = driver.find_element(By.ID, "acompanhamentoForm:chaveAcesso")
+    accessCode = driver.find_element(By.ID, "acompanhamentoForm:codigoAcesso")
 
-print("\nAgora vamos iniciar a captura das informacoes. Por favor, aguarde...")
+    accessKey.send_keys(qrcode)
 
-consultaCompletaBtn = driver.find_element(By.NAME, "acompanhamentoForm:j_idt54")
-consultaCompletaBtn.click()
+    print("\nVa ao navegador e preencha o codigo CAPTCHA, mas nao continue pelo navegador.")
+    input("Em seguida, retorne para este terminal e pressione Enter para continuar.")
 
-sleep(2)
+    print("\nAgora vamos iniciar a captura das informacoes. Por favor, aguarde...")
 
-fileName = fantasyNameReader.get(driver)
+    consultaCompletaBtn = driver.find_element(By.NAME, "acompanhamentoForm:j_idt54")
+    consultaCompletaBtn.click()
 
-if not fileName or not fileName.strip():
-    fileName = companyNameReader.get(driver)
+    sleep(2)
 
-if not fileName or not fileName.strip():
-    fileName = qrcode
+    fileName = fantasyNameReader.get(driver)
 
-if not fileName or not fileName.strip():
-    fileName = "Undefined Name"
+    if not fileName or not fileName.strip():
+        fileName = companyNameReader.get(driver)
 
-fileDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
-fileDate = fileDate.strftime("%Y-%m-%d %H%M")
+    if not fileName or not fileName.strip():
+        fileName = qrcode
 
-with open("target/" + fileDate + " " + fileName + ".json", "w", encoding="utf-8") as arquivo:
-    json_list = {}
+    if not fileName or not fileName.strip():
+        fileName = "Undefined Name"
 
-    json_list["cfeKey"] = cfeKeyReader.get(qrcode)
-    json_list["mfe"] = mfeReader.get(qrcode)
-    json_list["customer"] = getCustomer()
-    json_list["taxIdNumber"] = getTaxIdNumber()
-    json_list["stateRegistration"] = stateRegistrationReader.get(driver)
-    json_list["extractNumber"] = getExtractNumber()
-    json_list["costumerTaxIdNumber"] = costumerTaxIdNumberReader.get(driver)
-    json_list["costumerTaxIdNumberFormatted"] = costumerTaxIdNumberReader.get(driver)
-    json_list["taxpayerObservation"] = getTaxpayerObservation()
-    json_list["companyName"] = companyNameReader.get(driver)
-    json_list["fantasyName"] = fantasyNameReader.get(driver)
-    json_list["address"] = addressReader.get(driver)
-    json_list["items"] = itemListReader.get(driver)
+    fileDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
+    fileDate = fileDate.strftime("%Y-%m-%d %H%M")
 
-    paymentList = paymentListReader.get(driver)
+    with open("target/" + fileDate + " " + fileName + ".json", "w", encoding="utf-8") as arquivo:
+        json_list = {}
 
-    json_list["payments"] = paymentList
-    json_list["subTotal"] = subTotalReader.get(driver)
-    json_list["discount"] = discountReader.get(driver)
-    json_list["increase"] = getIncrease()
-    json_list["emissionDate"] = emissionDateReader.get(driver)
-    json_list["barcode"] = getBarcode()
-    json_list["qrCode"] = qrCodeReader.get(driver)
-    json_list["logoURL"] = getLogoURL()
-    json_list["satNumber"] = mfeReader.get(qrcode)["serialNumber"]
-    json_list["totalTaxes"] = getTotalTaxes()
-    json_list["total"] = totalReader.get(driver)
-    json_list["couponType"] = getCouponType()
-    json_list["saleCanceled"] = getSaleCanceled()
-    json_list["cancellationCouponData"] = getCancellationCouponData()
-    json_list["paymentMethod"] = paymentList[-1]["method"]
-    json_list["paymentValue"] = paymentList[-1]["value"]
-    json_list["paymentChange"] = paymentChangeReader.get(driver)
-    json_list["obsFiscoList"] = getObsFiscoList()
+        json_list["cfeKey"] = cfeKeyReader.get(qrcode)
+        json_list["mfe"] = mfeReader.get(qrcode)
+        json_list["customer"] = getCustomer()
+        json_list["taxIdNumber"] = getTaxIdNumber()
+        json_list["stateRegistration"] = stateRegistrationReader.get(driver)
+        json_list["extractNumber"] = getExtractNumber()
+        json_list["costumerTaxIdNumber"] = costumerTaxIdNumberReader.get(driver)
+        json_list["costumerTaxIdNumberFormatted"] = costumerTaxIdNumberReader.get(driver)
+        json_list["taxpayerObservation"] = getTaxpayerObservation()
+        json_list["companyName"] = companyNameReader.get(driver)
+        json_list["fantasyName"] = fantasyNameReader.get(driver)
+        json_list["address"] = addressReader.get(driver)
+        json_list["items"] = itemListReader.get(driver)
 
-    json.dump(json_list, arquivo, indent=4, ensure_ascii=False)
+        paymentList = paymentListReader.get(driver)
 
-print("\nProcesso de captura finalizado.")
-print("O arquivo .json foi gravado na pasta \"target\" dentro deste projeto.")
+        json_list["payments"] = paymentList
+        json_list["subTotal"] = subTotalReader.get(driver)
+        json_list["discount"] = discountReader.get(driver)
+        json_list["increase"] = getIncrease()
+        json_list["emissionDate"] = emissionDateReader.get(driver)
+        json_list["barcode"] = getBarcode()
+        json_list["qrCode"] = qrCodeReader.get(driver)
+        json_list["logoURL"] = getLogoURL()
+        json_list["satNumber"] = mfeReader.get(qrcode)["serialNumber"]
+        json_list["totalTaxes"] = getTotalTaxes()
+        json_list["total"] = totalReader.get(driver)
+        json_list["couponType"] = getCouponType()
+        json_list["saleCanceled"] = getSaleCanceled()
+        json_list["cancellationCouponData"] = getCancellationCouponData()
+        json_list["paymentMethod"] = paymentList[-1]["method"]
+        json_list["paymentValue"] = paymentList[-1]["value"]
+        json_list["paymentChange"] = paymentChangeReader.get(driver)
+        json_list["obsFiscoList"] = getObsFiscoList()
 
-print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco...")
+        json.dump(json_list, arquivo, indent=4, ensure_ascii=False)
 
-sleep(2)
-print("Mas isso sao cenas para os proximos capitulos...")
+    print("\nProcesso de captura finalizado.")
+    print("O arquivo .json foi gravado na pasta \"target\" dentro deste projeto.")
+
+    print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco...")
+
+    sleep(2)
+    print("Mas isso sao cenas para os proximos capitulos...")
