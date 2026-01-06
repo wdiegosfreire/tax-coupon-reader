@@ -215,5 +215,11 @@ while True:
 
     print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco...")
 
+    print("-------------------------------------")
+    print("Quantidade de itens: " + str(len(json_list["items"])))
+    print("Valor total bruto: " + str(json_list["total"]["gross"]))
+    print("Valor total com desconto: " + str(json_list["total"]["total"]))
+    print("-------------------------------------")
+
     sleep(2)
     print("Mas isso sao cenas para os proximos capitulos...")
