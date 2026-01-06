@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from datetime import datetime
+from pathlib import Path
+
 import json
 
 from src.readers.MfeReader import MfeReader
@@ -97,8 +99,10 @@ def getObsFiscoList():
 
 options = Options()
 options.add_argument("--start-maximized")
-service = Service(executable_path="C:\\Development\\Projects\\other-environment\\driver\\msedgedriver.exe")
-# driver = webdriver.Edge(service=service, options=options)
+
+BASE_DIR = Path(__file__).resolve().parent
+driver_path = BASE_DIR / "driver" / "msedgedriver.exe"
+service = Service(executable_path=str(driver_path))
 
 try:
     driver = webdriver.Edge(service=service, options=options)
@@ -123,8 +127,11 @@ except Exception as e:
 while True:
 
     # qrcode = "23250933200056034710651410001085051507317009"
-    print("\nOla!")
-    qrcode = input("Informe o QRCODE da NFC-e e pressione Enter:")
+    print("\nOlá!")
+    print("Informe o QRCODE da NFC-e para iniciar o processamento ou 'exit' para finalizar o programa.")
+    print("OBS.: Para que o processamento ocorra com sucesso, utilize o Microsoft Edge.")
+    print("Pressione ENTER para continuar...")
+    qrcode = input("")
 
     if qrcode == "exit":
         print("Encerrando o programa...")
