@@ -11,7 +11,6 @@ from pathlib import Path
 import json
 
 from src.readers.MfeReader import MfeReader
-from src.readers.ItemListReader import ItemListReader
 from src.readers.TotalReader import TotalReader
 from src.readers.CfeKeyReader import CfeKeyReader
 from src.readers.QrCodeReader import QrCodeReader
@@ -25,7 +24,10 @@ from src.readers.PaymentChangeReader import PaymentChangeReader
 from src.readers.StateRegistrationReader import StateRegistrationReader
 from src.readers.CostumerTaxIdNumberReader import CostumerTaxIdNumberReader
 
+from src.readers.ItemListReader import ItemListReader
 from src.readers.PaymentListReader import PaymentListReader
+
+from src.validators.DataValidator import DataValidator
 
 mfeReader = MfeReader()
 totalReader = TotalReader()
@@ -43,6 +45,8 @@ costumerTaxIdNumberReader = CostumerTaxIdNumberReader()
 
 itemListReader = ItemListReader()
 paymentListReader = PaymentListReader()
+
+dataValidator = DataValidator()
 
 #------------------------------------------------------------------------------
 # Global Methods
@@ -215,11 +219,7 @@ while True:
 
     print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco...")
 
-    print("-------------------------------------")
-    print("Quantidade de itens: " + str(len(json_list["items"])))
-    print("Valor total bruto: " + str(json_list["total"]["gross"]))
-    print("Valor total com desconto: " + str(json_list["total"]["total"]))
-    print("-------------------------------------")
+    dataValidator.execute(json_list)
 
     sleep(2)
     print("Mas isso sao cenas para os proximos capitulos...")
