@@ -29,7 +29,7 @@ class ItemListReader:
             item["un"] = product.find_elements(By.TAG_NAME, "td")[3].text
             item["valueOfTaxes"] = converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE1.find_elements(By.TAG_NAME, "tr")[4].find_elements(By.TAG_NAME, "td")[2].find_elements(By.TAG_NAME, "span")[0].text)
             item["register"] = {
-                "addition": 0,
+                "addition": converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[2].find_elements(By.TAG_NAME, "td")[2].find_elements(By.TAG_NAME, "span")[0].text),
                 "additionApportionment": 0,
                 "discount": converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[3].find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "span")[0].text),
                 "discountApportionment": 0
