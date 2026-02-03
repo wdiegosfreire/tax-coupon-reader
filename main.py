@@ -244,6 +244,6 @@ while True:
         if isValid:
             printGreen("Validacao TRUNCATE finalizada com SUCESSO!")
         else:
-            printGreen("Validacao TRUNCATE finalizada com erro!")
+            printRed("Validacao TRUNCATE finalizada com erro!")
 
     sleep(2)
