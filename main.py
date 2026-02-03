@@ -97,6 +97,12 @@ def getPaymentValue():
 def getObsFiscoList():
     return []
 
+def printRed(text):
+    print(f"\033[31m{text}\033[0m")
+
+def printGreen(text):
+    print(f"\033[32m{text}\033[0m")
+
 #------------------------------------------------------------------------------
 # webdriver configuration
 #------------------------------------------------------------------------------
@@ -112,10 +118,10 @@ try:
     driver = webdriver.Edge(service=service, options=options)
 except Exception as e:
     print("")
-    print("Não foi possível iniciar o WebDriver do Microsoft Edge.")
-    print("Possivelmente a versão instalada do WebDriver não é compatível com a versão atual do navegador.")
-    print("Acesse o site https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ para baixar a versão correta do WebDriver.")
-    print("Após baixar, substitua o arquivo msedgedriver.exe na pasta driver deste projeto.")
+    print("Não foi possivel iniciar o WebDriver do Microsoft Edge.")
+    print("Possivelmente a versao instalada do WebDriver não e compativel com a versão atual do navegador.")
+    print("Acesse o site https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ para baixar a versao correta do WebDriver.")
+    print("Apos baixar, substitua o arquivo msedgedriver.exe na pasta driver deste projeto.")
     sys.exit(0)
 
 
@@ -131,7 +137,7 @@ except Exception as e:
 while True:
 
     # qrcode = "23250933200056034710651410001085051507317009"
-    print("\nOlá!")
+    print("\nOla!")
     print("Informe o QRCODE da NFC-e para iniciar o processamento ou 'exit' para finalizar o programa.")
     print("OBS.: Para que o processamento ocorra com sucesso, utilize o Microsoft Edge.")
     print("Pressione ENTER para continuar...")
@@ -217,9 +223,27 @@ while True:
     print("\nProcesso de captura finalizado.")
     print("O arquivo .json foi gravado na pasta \"target\" dentro deste projeto.")
 
-    print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco...")
+    print("\nAgora vamos iniciar a validacao dos dados do arquivo json. Aguarde mais um pouco..." + "\n")
 
-    dataValidator.execute(json_list)
+    printGreen("Validacao ROUND_UP iniciada!" + "\n")
+    sleep(3)
+
+    isValid = dataValidator.execute(json_list, "roundUp")
+
+    if isValid:
+        printGreen("Validacao ROUND_UP finalizada com SUCESSO!")
+    else:
+        printRed("Validacao ROUND_UP finalizada com erro!" + "\n")
+
+        sleep(1)
+        printGreen("Validacao TRUNCATE iniciada!")
+        sleep(3)
+
+        isValid = dataValidator.execute(json_list, "trunc")
+
+        if isValid:
+            printGreen("Validacao TRUNCATE finalizada com SUCESSO!")
+        else:
+            printGreen("Validacao TRUNCATE finalizada com erro!")
 
     sleep(2)
-    print("Mas isso sao cenas para os proximos capitulos...")
