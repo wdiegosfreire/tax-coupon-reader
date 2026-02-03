@@ -8,41 +8,51 @@ class DataValidator:
 
         for item in jsonList["items"]:
             if (roundMethod == "roundUp"):
-                totalItens = totalItens + self.roundUp(item["amount"], item["price"], item["register"]["discount"])
+                totalItens = totalItens + self.roundUp(item["amount"], item["price"], item["register"]["discount"], item["register"]["addition"])
             elif (roundMethod == "trunc"):
-                totalItens = totalItens + self.truncate(item["amount"], item["price"], item["register"]["discount"])
+                totalItens = totalItens + self.truncate(item["amount"], item["price"], item["register"]["discount"], item["register"]["addition"])
 
         totalItens = round(totalItens, 2)
 
-        totalBruto = jsonList["total"]["gross"]
-        totalPago = jsonList["total"]["total"]
+        totalBruto = self.toStandards(jsonList["total"]["gross"])
+        totalPago = self.toStandards(jsonList["total"]["total"])
+        totalAddition = self.toStandards(jsonList["total"]["subtotalAddition"])
+        totalDiscount = self.toStandards(jsonList["total"]["subtotalDiscount"])
 
         print("-------------------------------------")
 
-        print("Quantidade de itens: " + str(len(jsonList["items"])))
-        print("Valor total bruto: " + str(totalBruto))
-        print("Valor pago com desconto ou acrescimo: " + str(totalPago))
-        print("Valor total calculado a partir dos itens: " + str(totalItens))
+        print("Items Amount: " + str(len(jsonList["items"])))
+        print("Total Gross: " + str(totalBruto))
+        print("Total Additions: " + str(totalAddition))
+        print("Total Discounts: " + str(totalDiscount))
+        print("Total pago com descontos/acrescimos: " + str(totalPago))
+        print("Total calculado a partir dos itens com descontos/acrescimos: " + str(totalItens))
 
         print("-------------------------------------" + "\n")
 
-        if str(totalItens) == str(totalPago):
+        if totalItens == totalPago:
             return True
 
         return False
 
-    def roundUp(self, amount, price, discount):
+    def roundUp(self, amount, price, discount, addition):
         amount = Decimal(str(amount))
         price = Decimal(str(price))
         discount = Decimal(str(discount))
+        addition = Decimal(str(addition))
 
-        total = (amount * price) - discount
+        total = (amount * price) - discount + addition
         return total.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-    def truncate(self, amount, price, discount):
+    def truncate(self, amount, price, discount, addition):
         amount = Decimal(str(amount))
         price = Decimal(str(price))
         discount = Decimal(str(discount))
+        addition = Decimal(str(addition))
 
-        total = (amount * price) - discount
+        total = (amount * price) - discount + addition
         return total.quantize(Decimal("0.00"), rounding=ROUND_DOWN)
+
+    def toStandards(self, value):
+        decimalValue = Decimal(str(value))
+        return decimalValue.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
