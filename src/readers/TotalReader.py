@@ -12,8 +12,8 @@ class TotalReader:
 
         return {
             "gross": converter.toDecimal(totalTab.find_elements(By.TAG_NAME, "tr")[6].find_elements(By.TAG_NAME, "td")[0].find_element(By.TAG_NAME, "span").text),
-            "totalDiscountAddition": converter.toDecimal(totalTab.find_elements(By.TAG_NAME, "tr")[6].find_elements(By.TAG_NAME, "td")[3].find_element(By.TAG_NAME, "span").text),
-            "subtotalDiscount": 0,
-            "subtotalAddition": 0,
+            "totalDiscountAddition": 0,
+            "subtotalDiscount": converter.toDecimal(totalTab.find_elements(By.TAG_NAME, "tr")[6].find_elements(By.TAG_NAME, "td")[3].find_element(By.TAG_NAME, "span").text),
+            "subtotalAddition": converter.toDecimal(totalTab.find_elements(By.TAG_NAME, "tr")[8].find_elements(By.TAG_NAME, "td")[1].find_element(By.TAG_NAME, "span").text),
             "total": converter.toDecimal(totalTab.find_elements(By.TAG_NAME, "tr")[8].find_elements(By.TAG_NAME, "td")[2].find_element(By.TAG_NAME, "span").text),
         }
