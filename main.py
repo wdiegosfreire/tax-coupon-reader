@@ -103,6 +103,21 @@ def printRed(text):
 def printGreen(text):
     print(f"\033[32m{text}\033[0m")
 
+def getStandarizedCompanyName(fileName: str, taxIdNumber: str) -> str:
+    mapa = {
+        "20688766800204": "Cometa Supermercado",
+        "61585865190775": "Farmácia Drogasil"
+    }
+
+    for chave, retorno in mapa.items():
+        if chave in taxIdNumber:
+            printGreen(f"\nA empresa '{fileName}' foi padronizada para '{retorno}'.")
+            return retorno
+
+    printRed(f"\nA empresa '{fileName}' nao possui padronizacao definida. Utilizando o nome original.")
+    return fileName
+
+
 #------------------------------------------------------------------------------
 # webdriver configuration
 #------------------------------------------------------------------------------
@@ -176,6 +191,8 @@ while True:
 
     if not fileName or not fileName.strip():
         fileName = "Undefined Name"
+
+    fileName = getStandarizedCompanyName(fileName, getTaxIdNumber())
 
     fileDate = datetime.strptime(emissionDateReader.get(driver), "%d/%m/%Y %H:%M:%S")
     fileDate = fileDate.strftime("%Y-%m-%d %H%M")
