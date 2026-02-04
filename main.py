@@ -106,7 +106,10 @@ def printGreen(text):
 def getStandarizedCompanyName(fileName: str, taxIdNumber: str) -> str:
     mapa = {
         "20688766800204": "Cometa Supermercado",
-        "61585865190775": "Farmácia Drogasil"
+        "61585865190775": "Farmácia Drogasil",
+        "06057223038063": "Supermercado Assaí",
+        "05346644000583": "IAP Cosméticos",
+        "04675604001322": "Supermercado Guará"
     }
 
     for chave, retorno in mapa.items():
