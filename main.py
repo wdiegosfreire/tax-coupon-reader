@@ -104,13 +104,7 @@ def printGreen(text):
     print(f"\033[32m{text}\033[0m")
 
 def getStandarizedCompanyName(fileName: str, taxIdNumber: str) -> str:
-    mapa = {
-        "20688766800204": "Cometa Supermercado",
-        "61585865190775": "Farmácia Drogasil",
-        "06057223038063": "Supermercado Assaí",
-        "05346644000583": "IAP Cosméticos",
-        "04675604001322": "Supermercado Guará"
-    }
+    mapa = readCompanies()
 
     for chave, retorno in mapa.items():
         if chave in taxIdNumber:
@@ -119,6 +113,20 @@ def getStandarizedCompanyName(fileName: str, taxIdNumber: str) -> str:
 
     printRed(f"\nA empresa '{fileName}' nao possui padronizacao definida. Utilizando o nome original.")
     return fileName
+
+def readCompanies() -> dict:
+    mapa = {}
+
+    with open("companies.txt", "r", encoding="utf-8") as f:
+        for linha in f:
+            linha = linha.strip()
+            if not linha or ";" not in linha:
+                continue
+
+            chave, valor = linha.split(";", 1)
+            mapa[chave.strip()] = valor.strip()
+
+    return mapa
 
 
 #------------------------------------------------------------------------------
