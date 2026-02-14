@@ -134,7 +134,7 @@ def readCompanies() -> dict:
 #------------------------------------------------------------------------------
 
 options = Options()
-options.add_argument("--start-maximized")
+# options.add_argument("--start-maximized")
 
 BASE_DIR = Path(__file__).resolve().parent
 driver_path = BASE_DIR / "driver" / "msedgedriver.exe"

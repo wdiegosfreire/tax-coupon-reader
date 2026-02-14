@@ -1,6 +1,13 @@
-20688766800204;Cometa Supermercado
-06887668002041;Cometa Supermercado
+20688766800204;Supermercado Cometa
+06887668002041;Supermercado Cometa
 61585865190775;Farmácia Drogasil
 06057223038063;Supermercado Assaí
 05346644000583;IAP Cosméticos
 04675604001322;Supermercado Guará
+50671728000113;Milky Moo
+06626253091440;Farmácia Pague Menos
+54539469000122;Padaria Fran
+35042984000158;Azilados
+55169696000176;Laliló
+08032284000290;Posto Tetra
+63473235002083;Freitas Varejo

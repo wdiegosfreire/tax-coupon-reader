@@ -10,8 +10,8 @@ class ItemListReader:
     def get(self, driver):
         driver.find_element(By.ID, "tab_3").click()
 
-        productList = driver.find_element(By.ID, "Prod").find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "div")[0].find_elements(By.CSS_SELECTOR, "table.toggle.box")
-        productDetailList = driver.find_element(By.ID, "Prod").find_elements(By.TAG_NAME, "fieldset")[0].find_elements(By.TAG_NAME, "div")[0].find_elements(By.CSS_SELECTOR, "table.toggable.box")
+        productList = driver.find_element(By.ID, "Prod").find_element(By.TAG_NAME, "fieldset").find_element(By.TAG_NAME, "div").find_elements(By.CSS_SELECTOR, "table.toggle.box")
+        productDetailList = driver.find_element(By.ID, "Prod").find_element(By.TAG_NAME, "fieldset").find_element(By.TAG_NAME, "div").find_elements(By.CSS_SELECTOR, "table.toggable.box")
 
         itemList = []
         for product, productDetail in zip(productList, productDetailList):
@@ -26,9 +26,9 @@ class ItemListReader:
             item["codeTrafic"] = PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[0].find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "span")[0].text
             item["description"] = product.find_elements(By.TAG_NAME, "td")[1].text
             item["amount"] = converter.toDecimal(product.find_elements(By.TAG_NAME, "td")[2].text)
-            item["price"] = converter.toDecimal(self.getValueOfLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Unitário de Comercialização"))
+            item["price"] = converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Unitário de Comercialização"))
             item["un"] = product.find_elements(By.TAG_NAME, "td")[3].text
-            item["valueOfTaxes"] = converter.toDecimal(self.getValueOfLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Aproximado dos Tributos"))
+            item["valueOfTaxes"] = converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Aproximado dos Tributos"))
             item["register"] = {
                 "addition": converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[2].find_elements(By.TAG_NAME, "td")[2].find_elements(By.TAG_NAME, "span")[0].text),
                 "additionApportionment": 0,
@@ -39,8 +39,8 @@ class ItemListReader:
             itemList.append(item)
 
         return itemList
-    
-    def getValueOfLabel(self, table, key):
+
+    def getValueWithLabel(self, table, key):
         key_norm = self.normalize(key)
 
         cellList = table.find_elements(By.XPATH, ".//td")
@@ -58,7 +58,7 @@ class ItemListReader:
                 continue
 
         return 0
-    
+
     def normalize(self, text):
         return ''.join(
             c for c in unicodedata.normalize('NFD', text)
