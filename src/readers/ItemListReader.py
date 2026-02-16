@@ -11,19 +11,19 @@ class ItemListReader:
         driver.find_element(By.ID, "tab_3").click()
 
         productList = driver.find_element(By.ID, "Prod").find_element(By.TAG_NAME, "fieldset").find_element(By.TAG_NAME, "div").find_elements(By.CSS_SELECTOR, "table.toggle.box")
-        productDetailList = driver.find_element(By.ID, "Prod").find_element(By.TAG_NAME, "fieldset").find_element(By.TAG_NAME, "div").find_elements(By.CSS_SELECTOR, "table.toggable.box")
+        productDetailList = driver.find_element(By.ID, "Prod").find_element(By.TAG_NAME, "fieldset").find_element(By.TAG_NAME, "div").find_elements(By.CSS_SELECTOR, ":scope > table.toggable.box")
 
         itemList = []
         for product, productDetail in zip(productList, productDetailList):
             driver.execute_script("arguments[0].style.display = 'block';", productDetail)
 
-            PRODUCT_DETAIL_TD0_TABLE0 = productDetail.find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "table")[0]
-            PRODUCT_DETAIL_TD0_TABLE1 = productDetail.find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "table")[1]
+            PRODUCT_DETAIL_TD0_TABLE0 = productDetail.find_element(By.TAG_NAME, "td").find_element(By.TAG_NAME, "table")
+            PRODUCT_DETAIL_TD0_TABLE1 = productDetail.find_element(By.TAG_NAME, "td").find_elements(By.TAG_NAME, "table")[1]
 
             item = {}
             item["item"] = converter.toInt(product.find_elements(By.TAG_NAME, "td")[0].text)
-            item["code"] = PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[0].find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "span")[0].text
-            item["codeTrafic"] = PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[0].find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "span")[0].text
+            item["code"] = self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Código do Produto")
+            item["codeTrafic"] = self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Código do Produto")
             item["description"] = product.find_elements(By.TAG_NAME, "td")[1].text
             item["amount"] = converter.toDecimal(product.find_elements(By.TAG_NAME, "td")[2].text)
             item["price"] = converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Unitário de Comercialização"))
