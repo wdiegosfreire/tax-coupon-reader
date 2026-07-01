@@ -1,14 +1,45 @@
 06057223038063;Supermercado Assaí
+04675604001322;Supermercado Guará
+04675604001080;Supermercado Guará
 20688766800204;Supermercado Cometa
 06887668002041;Supermercado Cometa
-04675604001322;Supermercado Guará
+03720882000310;Supermercado São Luís
+00063960057712;Supermercado Sams Club
 61585865190775;Farmácia Drogasil
-06626253091440;Farmácia Pague Menos
+04899316014410;Farmácia Extrafarma
 04899316039596;Farmácia Pague Menos
+06626253076484;Farmácia Pague Menos
+06626253091440;Farmácia Pague Menos
+04899316019137;Farmácia Pague Menos
+07298821000103;Farmácia Aldesul
+59474807000290;Padaria Bom do Trigo
+29578034000140;Padaria Empório Mais Pâes
 54539469000122;Padaria Fran
+65838157000136;Padaria Pão e Sabor
+49513386000124;Padaria Portitália
+49513770000127;Padaria Portitália
 08032284000290;Posto Tetra
+37599274000159;Posto Olírio
 05346644000583;IAP Cosméticos
 50671728000113;Milky Moo
 35042984000158;Azilados
 55169696000176;Laliló
 63473235002083;Freitas Varejo
+08817243000129;Filet Gourmet
+00782468000185;Picanha do Alemão
+03510280001652;Mini Kalzone
+03510280001733;Mini Kalzone
+03510280000257;Mini Kalzone
+03510280000923;Mini Kalzone
+53068117000173;Companhia do Churrasco
+02889730000200;Loja da Construção
+12027912000136;Balloon Mania
+65078105000109;Yoomi Presentes
+06626253026118;Farmácia Pague Menos
+63712763000185;Churrascaria Lebasi
+48466483000140;Ri Happy
+11137051033432;O Boticario
+92754738039026;Lojas Renner
+17320084000143;Lojas Havaianas
+13574594040147;Burguer King
+64731433007536;PB Kids

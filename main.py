@@ -112,6 +112,10 @@ def getStandarizedCompanyName(fileName: str, taxIdNumber: str) -> str:
             return retorno
 
     printRed(f"\nA empresa '{fileName}' nao possui padronizacao definida. Utilizando o nome original.")
+
+    with open("companies.txt", "a", encoding="utf-8") as f:
+        f.write(f"\n{taxIdNumber};{fileName} (nao padronizado)")
+
     return fileName
 
 def readCompanies() -> dict:

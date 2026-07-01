@@ -21,7 +21,7 @@ class ItemListReader:
             PRODUCT_DETAIL_TD0_TABLE1 = productDetail.find_element(By.TAG_NAME, "td").find_elements(By.TAG_NAME, "table")[1]
 
             item = {}
-            item["item"] = converter.toInt(product.find_elements(By.TAG_NAME, "td")[0].text)
+            item["item"] = converter.toInt(product.find_element(By.TAG_NAME, "td").text)
             item["code"] = self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Código do Produto")
             item["codeTrafic"] = self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Código do Produto")
             item["description"] = product.find_elements(By.TAG_NAME, "td")[1].text
@@ -30,9 +30,9 @@ class ItemListReader:
             item["un"] = product.find_elements(By.TAG_NAME, "td")[3].text
             item["valueOfTaxes"] = converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE1, "Valor Aproximado dos Tributos"))
             item["register"] = {
-                "addition": converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[2].find_elements(By.TAG_NAME, "td")[2].find_elements(By.TAG_NAME, "span")[0].text),
+                "addition": converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Outras Despesas Acessórias")),
                 "additionApportionment": 0,
-                "discount": converter.toDecimal(PRODUCT_DETAIL_TD0_TABLE0.find_elements(By.TAG_NAME, "tr")[3].find_elements(By.TAG_NAME, "td")[0].find_elements(By.TAG_NAME, "span")[0].text),
+                "discount": converter.toDecimal(self.getValueWithLabel(PRODUCT_DETAIL_TD0_TABLE0, "Valor do Desconto")),
                 "discountApportionment": 0
             }
 
