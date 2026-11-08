@@ -76,3 +76,4 @@
 48065046000115;Elos Pizzaria
 28396735000367;De Bem com a Vida
 43116779000207;Supermercado Rainha Bem Aqui (Jijoca)
+44296375000388;MP LAGO JACAREY - CE (nao padronizado)
