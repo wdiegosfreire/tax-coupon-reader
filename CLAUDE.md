@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-An interactive, Windows-only console tool that scrapes an **NFC-e** (consumer electronic invoice) from the SEFAZ-CE portal (`http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf`) with Selenium + **Microsoft Edge**, writes it as a JSON file to `target/`, and then checks that the item totals add up to the paid total. User-facing messages and commit messages are in Portuguese.
+An interactive, Windows-only console tool that scrapes an **NFC-e** (consumer electronic invoice) from the SEFAZ-CE portal (`http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf`) with Selenium (the user picks **Microsoft Edge** or **Mozilla Firefox** at startup), writes it as a JSON file to `target/`, and then checks that the item totals add up to the paid total. User-facing messages and commit messages are in Portuguese.
 
 ## Commands
 
@@ -17,11 +17,12 @@ pyinstaller main.spec                # builds dist/main.exe (console app)
 
 There are no tests, linter, or formatter configured.
 
-Running `main.py` is interactive and needs a human: it asks for the 44-digit access key, then the **CAPTCHA** shown in the Edge window (up to 5 attempts), and loops until you type `exit`. You can't run it end-to-end non-interactively.
+Running `main.py` is interactive and needs a human: it asks for the browser (1 = Edge, 2 = Firefox), then the 44-digit access key, then the **CAPTCHA** shown in the browser window (up to 5 attempts), and loops until you type `exit`. You can't run it end-to-end non-interactively.
 
 ## Runtime requirements
 
-- `driver/msedgedriver.exe` must match the installed Edge version. `driver/` is git-ignored. When Edge updates, startup fails with a message telling the user to download the matching driver.
+- WebDriver selection (`createDriver` in `main.py`): if `driver/msedgedriver.exe` or `driver/geckodriver.exe` exists, that file is used and must match the installed browser version. Otherwise Selenium Manager finds the driver or downloads it into `~/.cache/selenium` (this needs internet access). `driver/` is git-ignored. Remove a stale `msedgedriver.exe` from `driver/` to let Selenium Manager take over.
+- Readers only use standard WebDriver calls, so they work the same in both browsers. To add another browser, add an entry to `BROWSERS` and a branch in `createDriver`.
 - `target/` must exist (it's git-ignored, and the code does not create it).
 
 ## Architecture
