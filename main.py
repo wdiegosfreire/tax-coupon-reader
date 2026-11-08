@@ -1,11 +1,12 @@
 import sys
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
-from datetime import datetime
+from datetime import datetime, time
 from pathlib import Path
 
 import json
@@ -167,6 +168,7 @@ except Exception as e:
 while True:
 
     # qrcode = "23250933200056034710651410001085051507317009"
+    print("\n\n\n\n\n\n\n\n\n\n")
     print("\nOla!")
     print("Informe o QRCODE da NFC-e para iniciar o processamento ou 'exit' para finalizar o programa.")
     print("OBS.: Para que o processamento ocorra com sucesso, utilize o Microsoft Edge.")
@@ -182,19 +184,34 @@ while True:
     sleep(1)
 
     accessKey = driver.find_element(By.ID, "acompanhamentoForm:chaveAcesso")
-    accessCode = driver.find_element(By.ID, "acompanhamentoForm:codigoAcesso")
-
     accessKey.send_keys(qrcode)
 
-    print("\nVa ao navegador e preencha o codigo CAPTCHA, mas nao continue pelo navegador.")
-    input("Em seguida, retorne para este terminal e pressione Enter para continuar.")
+    tentativas = 0
 
-    print("\nAgora vamos iniciar a captura das informacoes. Por favor, aguarde...")
+    while True:
+        try:
+            accessCode = driver.find_element(By.ID, "acompanhamentoForm:codigoAcesso")
+            accessCode.clear()
 
-    consultaCompletaBtn = driver.find_element(By.NAME, "acompanhamentoForm:j_idt54")
-    consultaCompletaBtn.click()
+            if tentativas == 0:
+                print("\nInforme o codigo CAPTCHA:")
+            else:
+                print("\nCodigo CAPTCHA incorreto. Tente novamente:")
 
-    sleep(2)
+            accessCode.send_keys(input(""))
+
+            consultaCompletaBtn = driver.find_element(By.NAME, "acompanhamentoForm:j_idt54")
+            consultaCompletaBtn.click()
+
+            tentativas += 1
+
+            if (tentativas > 4):
+                printRed("\nNumero maximo de tentativas de CAPTCHA atingido. Encerrando o programa.")
+                sys.exit()
+
+            sleep(2)
+        except NoSuchElementException:
+            break
 
     fileName = fantasyNameReader.get(driver)
 
