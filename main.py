@@ -1,8 +1,10 @@
 import sys
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.edge.service import Service
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
@@ -138,21 +140,55 @@ def readCompanies() -> dict:
 # webdriver configuration
 #------------------------------------------------------------------------------
 
-options = Options()
-# options.add_argument("--start-maximized")
-
 BASE_DIR = Path(__file__).resolve().parent
-driver_path = BASE_DIR / "driver" / "msedgedriver.exe"
-service = Service(executable_path=str(driver_path))
+
+BROWSERS = {
+    "1": {
+        "name": "Microsoft Edge",
+        "driverFile": "msedgedriver.exe",
+        "driverUrl": "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/",
+    },
+    "2": {
+        "name": "Mozilla Firefox",
+        "driverFile": "geckodriver.exe",
+        "driverUrl": "https://github.com/mozilla/geckodriver/releases",
+    },
+}
+
+def chooseBrowser() -> str:
+    print("\nSelecione o navegador que sera utilizado:")
+    for key, browser in BROWSERS.items():
+        print(f"{key} - {browser['name']}")
+
+    while True:
+        option = input("").strip()
+        if option in BROWSERS:
+            return option
+        printRed("Opcao invalida. Informe o numero de um dos navegadores listados:")
+
+def createDriver(option: str):
+    # Usa o driver da pasta "driver" quando existir; caso contrario, o Selenium Manager
+    # localiza ou baixa automaticamente o driver compativel com o navegador instalado.
+    driverPath = BASE_DIR / "driver" / BROWSERS[option]["driverFile"]
+    executablePath = str(driverPath) if driverPath.exists() else None
+
+    if option == "1":
+        return webdriver.Edge(service=EdgeService(executable_path=executablePath), options=EdgeOptions())
+
+    return webdriver.Firefox(service=FirefoxService(executable_path=executablePath), options=FirefoxOptions())
+
+browserOption = chooseBrowser()
+browser = BROWSERS[browserOption]
 
 try:
-    driver = webdriver.Edge(service=service, options=options)
+    driver = createDriver(browserOption)
 except Exception as e:
     print("")
-    print("Não foi possivel iniciar o WebDriver do Microsoft Edge.")
-    print("Possivelmente a versao instalada do WebDriver não e compativel com a versão atual do navegador.")
-    print("Acesse o site https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ para baixar a versao correta do WebDriver.")
-    print("Apos baixar, substitua o arquivo msedgedriver.exe na pasta driver deste projeto.")
+    printRed(f"Não foi possivel iniciar o WebDriver do {browser['name']}.")
+    print(f"Detalhes: {e}")
+    print("Possivelmente o navegador nao esta instalado ou a versao do WebDriver não e compativel com a versão atual do navegador.")
+    print(f"Acesse o site {browser['driverUrl']} para baixar a versao correta do WebDriver.")
+    print(f"Apos baixar, coloque o arquivo {browser['driverFile']} na pasta driver deste projeto.")
     sys.exit(0)
 
 
@@ -171,7 +207,7 @@ while True:
     print("\n\n\n\n\n\n\n\n\n\n")
     print("\nOla!")
     print("Informe o QRCODE da NFC-e para iniciar o processamento ou 'exit' para finalizar o programa.")
-    print("OBS.: Para que o processamento ocorra com sucesso, utilize o Microsoft Edge.")
+    print(f"OBS.: O processamento sera feito pelo navegador {browser['name']}.")
     print("Pressione ENTER para continuar...")
     qrcode = input("")
 
